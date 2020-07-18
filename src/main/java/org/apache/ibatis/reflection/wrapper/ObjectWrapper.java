@@ -23,12 +23,26 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ * 对象包装器接口，基于 MetaClass 工具类，
  */
 public interface ObjectWrapper {
 
+  /**
+   * 获得值
+   *
+   * @param prop PropertyTokenizer 对象，相当于键
+   * @return 值
+   */
   Object get(PropertyTokenizer prop);
 
+  /**
+   * 设置值
+   *
+   * @param prop  PropertyTokenizer 对象，相当于键
+   * @param value 值
+   */
   void set(PropertyTokenizer prop, Object value);
+
 
   String findProperty(String name, boolean useCamelCaseMapping);
 
@@ -46,10 +60,26 @@ public interface ObjectWrapper {
 
   MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory);
 
+  /**
+   * 是否为集合
+   *
+   * @return TF
+   */
   boolean isCollection();
 
+  /**
+   * 添加元素到集合
+   *
+   * @param element 元素
+   */
   void add(Object element);
 
+  /**
+   * 添加多个元素到集合
+   *
+   * @param element 元素
+   * @param <E>     泛型
+   */
   <E> void addAll(List<E> element);
 
 }

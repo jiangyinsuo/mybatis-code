@@ -21,8 +21,13 @@ import java.lang.reflect.Field;
 
 /**
  * @author Clinton Begin
+ * 实现 Invoker 接口，获得 Field 调用者。
  */
 public class GetFieldInvoker implements Invoker {
+
+  /**
+   * Field 对象
+   */
   private final Field field;
 
   public GetFieldInvoker(Field field) {

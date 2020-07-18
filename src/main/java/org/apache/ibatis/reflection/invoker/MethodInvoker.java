@@ -22,10 +22,18 @@ import java.lang.reflect.Method;
 
 /**
  * @author Clinton Begin
+ * 实现 Invoker 接口，指定方法的调用器。
  */
 public class MethodInvoker implements Invoker {
 
+  /**
+   * 类型
+   */
   private final Class<?> type;
+
+  /**
+   * 指定方法
+   */
   private final Method method;
 
   public MethodInvoker(Method method) {
