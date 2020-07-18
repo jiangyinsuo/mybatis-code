@@ -19,5 +19,6 @@
  */
 /**
  * Base package for Datasources.
+ * 数据源模块
  */
 package org.apache.ibatis.datasource;
