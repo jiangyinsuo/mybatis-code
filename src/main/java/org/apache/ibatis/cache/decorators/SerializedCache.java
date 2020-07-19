@@ -23,9 +23,13 @@ import java.io.*;
 
 /**
  * @author Clinton Begin
+ * 实现 Cache 接口，支持序列化值的 Cache 实现类
  */
 public class SerializedCache implements Cache {
 
+  /**
+   * 装饰的 Cache 对象
+   */
   private final Cache delegate;
 
   public SerializedCache(Cache delegate) {
@@ -54,6 +58,7 @@ public class SerializedCache implements Cache {
   @Override
   public Object getObject(Object key) {
     Object object = delegate.getObject(key);
+    // 反序列化
     return object == null ? null : deserialize((byte[]) object);
   }
 
