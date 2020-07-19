@@ -17,5 +17,6 @@
  */
 /**
  * Type handlers.
+ * 类型转换模块
  */
 package org.apache.ibatis.type;
