@@ -31,6 +31,7 @@ import java.util.List;
  * Provides a very simple API for accessing resources within an application server.
  *
  * @author Ben Gunter
+ * 虚拟文件系统( Virtual File System )抽象类，用来查找指定路径下的的文件们
  */
 public abstract class VFS {
   /**

@@ -19,5 +19,6 @@
  */
 /**
  * Utilities to read resources.
+ * 资源加载 io 模块
  */
 package org.apache.ibatis.io;

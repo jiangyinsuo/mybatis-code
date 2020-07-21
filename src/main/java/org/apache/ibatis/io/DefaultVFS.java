@@ -33,6 +33,7 @@ import java.util.jar.JarInputStream;
  * A default implementation of {@link VFS} that works for most application servers.
  *
  * @author Ben Gunter
+ * 继承 VFS 抽象类，默认的 VFS 实现类
  */
 public class DefaultVFS extends VFS {
   private static final Log log = LogFactory.getLog(DefaultVFS.class);

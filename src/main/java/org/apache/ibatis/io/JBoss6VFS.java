@@ -29,6 +29,7 @@ import java.util.List;
  * A {@link VFS} implementation that works with the VFS API provided by JBoss 6.
  *
  * @author Ben Gunter
+ * 继承 VFS 抽象类，基于 JBoss 的 VFS 实现类
  */
 public class JBoss6VFS extends VFS {
   private static final Log log = LogFactory.getLog(JBoss6VFS.class);

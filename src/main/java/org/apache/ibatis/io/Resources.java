@@ -25,14 +25,19 @@ import java.util.Properties;
  * A class to simplify access to resources through the classloader.
  *
  * @author Clinton Begin
+ * Resource 工具类。
  */
 public class Resources {
 
+  /**
+   * ClassLoaderWrapper 对象
+   */
   private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
 
   /**
    * Charset to use when calling getResourceAsReader.
    * null means use the system default.
+   * 字符集
    */
   private static Charset charset;
 
