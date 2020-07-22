@@ -34,6 +34,7 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author Clinton Begin
+ * 通过 SQL 语句获得主键的注解
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -44,6 +45,7 @@ public @interface SelectKey {
    * Returns an SQL for retrieving a key value.
    *
    * @return an SQL for retrieving a key value
+   * 语句
    */
   String[] statement();
 
@@ -54,6 +56,7 @@ public @interface SelectKey {
    * </p>
    *
    * @return property names that separate with comma(',')
+   * Java 对象的属性
    */
   String keyProperty();
 
@@ -64,6 +67,7 @@ public @interface SelectKey {
    * </p>
    *
    * @return column names that separate with comma(',')
+   * 数据库的字段
    */
   String keyColumn() default "";
 
@@ -71,6 +75,7 @@ public @interface SelectKey {
    * Returns whether retrieves a key value before executing insert/update statement.
    *
    * @return {@code true} if execute before; {@code false} if otherwise
+   * 在插入语句执行前，还是执行后
    */
   boolean before();
 
@@ -78,6 +83,7 @@ public @interface SelectKey {
    * Returns the key value type.
    *
    * @return the key value type
+   * 返回类型
    */
   Class<?> resultType();
 
@@ -85,6 +91,7 @@ public @interface SelectKey {
    * Returns the statement type to use.
    *
    * @return the statement type
+   *  {@link #statement()} 的类型
    */
   StatementType statementType() default StatementType.PREPARED;
 

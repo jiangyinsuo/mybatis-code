@@ -32,6 +32,7 @@ import java.lang.annotation.*;
  *
  * @author Kazuki Shimizu
  * @since 3.3.0
+ * Flush 注解
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

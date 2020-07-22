@@ -28,6 +28,7 @@ import java.lang.annotation.Target;
  * @author Clinton Begin
  * @see Result
  * @see Results
+ * 复杂类型的单独属性值的注解
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -53,6 +54,7 @@ public @interface One {
    * Returns the statement id that retrieves single object.
    *
    * @return the statement id
+   * 已映射语句（也就是映射器方法）的全限定名
    */
   String select() default "";
 
@@ -60,6 +62,7 @@ public @interface One {
    * Returns the fetch strategy for nested statement.
    *
    * @return the fetch strategy
+   * 加载类型
    */
   FetchType fetchType() default FetchType.DEFAULT;
 

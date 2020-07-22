@@ -34,6 +34,7 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author Clinton Begin
+ * 语言驱动的注解
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -43,6 +44,7 @@ public @interface Lang {
    * Returns the {@link LanguageDriver} implementation type to use.
    *
    * @return the {@link LanguageDriver} implementation type
+   * 驱动类
    */
   Class<? extends LanguageDriver> value();
 }

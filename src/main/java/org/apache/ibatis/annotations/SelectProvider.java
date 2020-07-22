@@ -39,6 +39,7 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author Clinton Begin
+ * 查询语句提供器
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -63,6 +64,7 @@ public @interface SelectProvider {
    *
    * @return a type that implements an SQL provider method
    * @see #value()
+   * 提供的类
    */
   Class<?> type() default void.class;
 
@@ -85,6 +87,7 @@ public @interface SelectProvider {
    * </ul>
    *
    * @return a method name of method for providing an SQL
+   * 提供的方法
    */
   String method() default "";
 

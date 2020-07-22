@@ -39,6 +39,7 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author Clinton Begin
+ * 更新语句提供器
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

@@ -31,6 +31,7 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author Clinton Begin
+ * 方法参数名的注解
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

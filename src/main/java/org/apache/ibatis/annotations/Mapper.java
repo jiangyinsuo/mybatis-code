@@ -31,6 +31,7 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author Frank David Martínez
+ * 标记这是个 Mapper 的注解
  */
 @Documented
 @Inherited

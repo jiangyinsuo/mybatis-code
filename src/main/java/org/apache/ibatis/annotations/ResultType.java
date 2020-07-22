@@ -36,6 +36,7 @@ import java.lang.annotation.*;
  *
  * @author Jeff Butler
  * @since 3.2.0
+ * 结果类型
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -45,6 +46,7 @@ public @interface ResultType {
    * Returns the return type.
    *
    * @return the return type
+   * 类型
    */
   Class<?> value();
 }

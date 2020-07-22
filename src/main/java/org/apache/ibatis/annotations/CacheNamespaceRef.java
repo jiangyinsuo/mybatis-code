@@ -34,6 +34,7 @@ import java.lang.annotation.*;
  *
  * @author Clinton Begin
  * @author Kazuki Shimizu
+ * 指向指定命名空间的注解
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -52,6 +53,7 @@ public @interface CacheNamespaceRef {
    *
    * @return the namespace name
    * @since 3.4.2
+   * 指向的命名空间
    */
   String name() default "";
 }
