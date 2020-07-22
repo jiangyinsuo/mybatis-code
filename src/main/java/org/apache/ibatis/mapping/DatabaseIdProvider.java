@@ -25,12 +25,25 @@ import java.util.Properties;
  * This mechanism enables supporting multiple vendors or versions
  *
  * @author Eduardo Macarron
+ * 数据库标识提供器接口
  */
 public interface DatabaseIdProvider {
 
+  /**
+   * 设置属性
+   *
+   * @param p Properties 对象
+   */
   default void setProperties(Properties p) {
     // NOP
   }
 
+  /**
+   * 获得数据库标识
+   *
+   * @param dataSource 数据源
+   * @return 数据库标识
+   * @throws SQLException 当 DB 发生异常时
+   */
   String getDatabaseId(DataSource dataSource) throws SQLException;
 }
