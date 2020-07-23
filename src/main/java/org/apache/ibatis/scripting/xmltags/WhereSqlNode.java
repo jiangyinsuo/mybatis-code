@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ * 继承 TrimSqlNode 类，<where /> 标签的 SqlNode 实现类
  */
 public class WhereSqlNode extends TrimSqlNode {
 
