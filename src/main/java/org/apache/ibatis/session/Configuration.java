@@ -617,6 +617,7 @@ public class Configuration {
    * @since 3.5.1
    */
   public LanguageDriver getLanguageDriver(Class<? extends LanguageDriver> langClass) {
+    // 获得 langClass 类
     if (langClass == null) {
       return languageRegistry.getDefaultDriver();
     }
