@@ -38,12 +38,14 @@ import java.util.Map.Entry;
 /**
  * @author Clinton Begin
  * @author Kazuki Shimizu
+ * 实现 KeyGenerator 接口，基于 Statement#getGeneratedKeys() 方法的 KeyGenerator 实现类，
+ * 适用于 MySQL、H2 主键生成
  */
 public class Jdbc3KeyGenerator implements KeyGenerator {
 
   /**
    * A shared instance.
-   *
+   * 共享的单例
    * @since 3.4.3
    */
   public static final Jdbc3KeyGenerator INSTANCE = new Jdbc3KeyGenerator();
@@ -74,6 +76,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   @Override
   public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     // do nothing
+    //空实现。因为对于 Jdbc3KeyGenerator 类的主键，是在 SQL 执行后，才生成
   }
 
   @Override
@@ -82,11 +85,13 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
   }
 
   public void processBatch(MappedStatement ms, Statement stmt, Object parameter) {
+    // <1> 获得主键属性的配置。如果为空，则直接返回，说明不需要主键
     final String[] keyProperties = ms.getKeyProperties();
     if (keyProperties == null || keyProperties.length == 0) {
       return;
     }
     try (ResultSet rs = stmt.getGeneratedKeys()) {
+      // <2> 获得返回的自增主键
       final ResultSetMetaData rsmd = rs.getMetaData();
       final Configuration configuration = ms.getConfiguration();
       if (rsmd.getColumnCount() < keyProperties.length) {
@@ -117,11 +122,13 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
 
   private void assignKeysToParam(Configuration configuration, ResultSet rs, ResultSetMetaData rsmd,
                                  String[] keyProperties, Object parameter) throws SQLException {
+    // <1> 包装成 Collection 对象
     Collection<?> params = collectionize(parameter);
     if (params.isEmpty()) {
       return;
     }
     List<KeyAssigner> assignerList = new ArrayList<>();
+    // <2> 遍历 paramAsCollection 数组
     for (int i = 0; i < keyProperties.length; i++) {
       assignerList.add(new KeyAssigner(configuration, rsmd, i + 1, null, keyProperties[i]));
     }

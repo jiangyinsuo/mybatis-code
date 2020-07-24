@@ -22,11 +22,28 @@ import java.sql.Statement;
 
 /**
  * @author Clinton Begin
+ * 主键生成器接口
  */
 public interface KeyGenerator {
 
+  /**
+   * SQL执行前
+   *
+   * @param executor  Executor
+   * @param ms        MappedStatement
+   * @param stmt      Statement
+   * @param parameter Object
+   */
   void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter);
 
+  /**
+   * SQL执行后
+   *
+   * @param executor  Executor
+   * @param ms        MappedStatement
+   * @param stmt      Statement
+   * @param parameter Object
+   */
   void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter);
 
 }
