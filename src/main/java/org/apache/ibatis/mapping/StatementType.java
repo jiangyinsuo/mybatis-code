@@ -20,8 +20,20 @@ package org.apache.ibatis.mapping;
  */
 public enum StatementType {
 
+  /**
+   * java.sql.Statement
+   * SimpleStatementHandler
+   */
   STATEMENT,
+  /**
+   * java.sql.PreparedStatement
+   * PreparedStatementHandler
+   */
   PREPARED,
+  /**
+   * java.sql.CallableStatement
+   * CallableStatementHandler
+   */
   CALLABLE
 
 }

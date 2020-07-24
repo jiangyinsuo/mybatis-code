@@ -29,6 +29,7 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ * 继承 BaseStatementHandler 抽象类，java.sql.CallableStatement 的 StatementHandler 实现类
  */
 public class CallableStatementHandler extends BaseStatementHandler {
 
