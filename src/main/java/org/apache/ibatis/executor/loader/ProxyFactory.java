@@ -23,13 +23,30 @@ import java.util.Properties;
 
 /**
  * @author Eduardo Macarron
+ * 代理工厂接口，用于创建需要延迟加载属性的结果对象
  */
 public interface ProxyFactory {
 
+  /**
+   * 设置属性，目前是空实现。可以暂时无视该方法
+   *
+   * @param properties properties
+   */
   default void setProperties(Properties properties) {
     // NOP
   }
 
+  /**
+   * 创建代理对象
+   *
+   * @param target              Object
+   * @param lazyLoader          ResultLoaderMap
+   * @param configuration       Configuration
+   * @param objectFactory       ObjectFactory
+   * @param constructorArgTypes List<Class<?>>
+   * @param constructorArgs     List<Object>
+   * @return Object
+   */
   Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
 
 }

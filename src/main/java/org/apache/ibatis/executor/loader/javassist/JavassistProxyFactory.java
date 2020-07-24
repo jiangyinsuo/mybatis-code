@@ -47,6 +47,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
 
   public JavassistProxyFactory() {
     try {
+      // 加载 javassist.util.proxy.ProxyFactory 类
       Resources.classForName("javassist.util.proxy.ProxyFactory");
     } catch (Throwable e) {
       throw new IllegalStateException("Cannot enable lazy loading because Javassist is not available. Add Javassist to your classpath.", e);
@@ -54,10 +55,11 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
   }
 
   static Object crateProxy(Class<?> type, MethodHandler callback, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
-
+    // 创建 javassist ProxyFactory 对象
     ProxyFactory enhancer = new ProxyFactory();
+    // 设置父类
     enhancer.setSuperclass(type);
-
+    // 根据情况，设置接口为 WriteReplaceInterface 。和序列化相关，可以无视
     try {
       type.getDeclaredMethod(WRITE_REPLACE_METHOD);
       // ObjectOutputStream will call writeReplace of objects returned by writeReplace
@@ -69,7 +71,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     } catch (SecurityException e) {
       // nothing to do here
     }
-
+    // 创建代理对象
     Object enhanced;
     Class<?>[] typesArray = constructorArgTypes.toArray(new Class[constructorArgTypes.size()]);
     Object[] valuesArray = constructorArgs.toArray(new Object[constructorArgs.size()]);
@@ -78,6 +80,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
     } catch (Exception e) {
       throw new ExecutorException("Error creating lazy proxy.  Cause: " + e, e);
     }
+    // <x> 设置代理对象的执行器
     ((Proxy) enhanced).setHandler(callback);
     return enhanced;
   }
@@ -113,8 +116,11 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
 
     public static Object createProxy(Object target, ResultLoaderMap lazyLoader, Configuration configuration, ObjectFactory objectFactory, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
       final Class<?> type = target.getClass();
+      // 创建 EnhancedResultObjectProxyImpl 对象
       EnhancedResultObjectProxyImpl callback = new EnhancedResultObjectProxyImpl(type, lazyLoader, configuration, objectFactory, constructorArgTypes, constructorArgs);
+      // 创建代理对象
       Object enhanced = crateProxy(type, callback, constructorArgTypes, constructorArgs);
+      // 将 target 的属性，复制到 enhanced 中
       PropertyCopier.copyBeanProperties(type, target, enhanced);
       return enhanced;
     }
@@ -124,6 +130,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
       final String methodName = method.getName();
       try {
         synchronized (lazyLoader) {
+          // 忽略 WRITE_REPLACE_METHOD ，和序列化相关
           if (WRITE_REPLACE_METHOD.equals(methodName)) {
             Object original;
             if (constructorArgTypes.isEmpty()) {
@@ -139,11 +146,15 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
             }
           } else {
             if (lazyLoader.size() > 0 && !FINALIZE_METHOD.equals(methodName)) {
+              // <1.1> 加载所有延迟加载的属性
               if (aggressive || lazyLoadTriggerMethods.contains(methodName)) {
                 lazyLoader.loadAll();
+                // <1.2> 如果调用了 setting 方法，则不在使用延迟加载
               } else if (PropertyNamer.isSetter(methodName)) {
                 final String property = PropertyNamer.methodToProperty(methodName);
+                // 移除
                 lazyLoader.remove(property);
+                // <1.3> 如果调用了 getting 方法，则执行延迟加载
               } else if (PropertyNamer.isGetter(methodName)) {
                 final String property = PropertyNamer.methodToProperty(methodName);
                 if (lazyLoader.hasLoader(property)) {
@@ -153,6 +164,7 @@ public class JavassistProxyFactory implements org.apache.ibatis.executor.loader.
             }
           }
         }
+        // <2> 继续执行原方法
         return methodProxy.invoke(enhanced, args);
       } catch (Throwable t) {
         throw ExceptionUtil.unwrapThrowable(t);
