@@ -17,10 +17,15 @@ package org.apache.ibatis.executor;
 
 /**
  * @author Clinton Begin
+ * 错误上下文，负责记录错误日志
+ * 跟踪工具类
  */
 public class ErrorContext {
 
   private static final String LINE_SEPARATOR = System.lineSeparator();
+  /**
+   * 错误信息跟踪本地方法
+   */
   private static final ThreadLocal<ErrorContext> LOCAL = ThreadLocal.withInitial(ErrorContext::new);
 
   private ErrorContext stored;

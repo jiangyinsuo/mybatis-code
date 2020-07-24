@@ -19,5 +19,7 @@
  */
 /**
  * Contains the statement executors.
+ * SQL执行模块
+ * Executor 接口及其实现类，作为 SQL 执行的核心入口
  */
 package org.apache.ibatis.executor;

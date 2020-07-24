@@ -19,5 +19,6 @@
  */
 /**
  * Contains the key generators.
+ * 实现数据库主键生成( 获得 )的功能
  */
 package org.apache.ibatis.executor.keygen;

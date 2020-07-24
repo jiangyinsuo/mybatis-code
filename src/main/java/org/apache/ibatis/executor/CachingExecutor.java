@@ -31,14 +31,24 @@ import java.util.List;
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
+ * 实现二级缓存的功能
+ * 二级缓存是支持跨 Session 进行共享
  */
 public class CachingExecutor implements Executor {
 
+  /**
+   * 被委托的 Executor 对象
+   */
   private final Executor delegate;
+  /**
+   * TransactionalCacheManager 对象
+   */
   private final TransactionalCacheManager tcm = new TransactionalCacheManager();
 
   public CachingExecutor(Executor delegate) {
+    // <1>
     this.delegate = delegate;
+    // <2> 设置 delegate 被当前执行器所包装
     delegate.setExecutorWrapper(this);
   }
 
@@ -52,11 +62,14 @@ public class CachingExecutor implements Executor {
     try {
       // issues #499, #524 and #573
       if (forceRollback) {
+        // 如果强制回滚，则回滚 TransactionalCacheManager
         tcm.rollback();
       } else {
+        // 如果强制提交，则提交 TransactionalCacheManager
         tcm.commit();
       }
     } finally {
+      // 执行 delegate 对应的方法
       delegate.close(forceRollback);
     }
   }
@@ -68,7 +81,9 @@ public class CachingExecutor implements Executor {
 
   @Override
   public int update(MappedStatement ms, Object parameterObject) throws SQLException {
+    // 如果需要清空缓存，则进行清空
     flushCacheIfRequired(ms);
+    // 执行 delegate 对应的方法
     return delegate.update(ms, parameterObject);
   }
 
@@ -80,28 +95,40 @@ public class CachingExecutor implements Executor {
 
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
+    // 获得 BoundSql 对象
     BoundSql boundSql = ms.getBoundSql(parameterObject);
+    // 创建 CacheKey 对象
     CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
+    // 查询
     return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
   @Override
   public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
     throws SQLException {
+    // <1>
     Cache cache = ms.getCache();
     if (cache != null) {
+      // <2.1> 如果需要清空缓存，则进行清空
       flushCacheIfRequired(ms);
       if (ms.isUseCache() && resultHandler == null) {
+        // 暂时忽略，存储过程相关
         ensureNoOutParams(ms, boundSql);
         @SuppressWarnings("unchecked")
+        // <2.3> 从二级缓存中，获取结果
         List<E> list = (List<E>) tcm.getObject(cache, key);
         if (list == null) {
+          // <2.4.1> 如果不存在，则从数据库中查询
           list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
-          tcm.putObject(cache, key, list); // issue #578 and #116
+          // issue #578 and #116
+          // <2.4.2> 缓存结果到二级缓存中
+          tcm.putObject(cache, key, list);
         }
+        // <2.5> 如果存在，则直接返回结果
         return list;
       }
     }
+    // <3> 不使用缓存，则从数据库中查询
     return delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
   }
 
@@ -112,16 +139,20 @@ public class CachingExecutor implements Executor {
 
   @Override
   public void commit(boolean required) throws SQLException {
+    // 执行 delegate 对应的方法
     delegate.commit(required);
+    // 提交 TransactionalCacheManager
     tcm.commit();
   }
 
   @Override
   public void rollback(boolean required) throws SQLException {
     try {
+      // 执行 delegate 对应的方法
       delegate.rollback(required);
     } finally {
       if (required) {
+        // 回滚 TransactionalCacheManager
         tcm.rollback();
       }
     }
@@ -159,6 +190,7 @@ public class CachingExecutor implements Executor {
 
   private void flushCacheIfRequired(MappedStatement ms) {
     Cache cache = ms.getCache();
+    // 是否需要清空缓存
     if (cache != null && ms.isFlushCacheRequired()) {
       tcm.clear(cache);
     }

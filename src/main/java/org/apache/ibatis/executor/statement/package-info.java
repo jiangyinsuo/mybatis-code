@@ -19,5 +19,6 @@
  */
 /**
  * Statement handlers.
+ * 实现向数据库发起 SQL 命令
  */
 package org.apache.ibatis.executor.statement;

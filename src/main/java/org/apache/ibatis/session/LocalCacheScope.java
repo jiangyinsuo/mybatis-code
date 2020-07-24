@@ -17,7 +17,15 @@ package org.apache.ibatis.session;
 
 /**
  * @author Eduardo Macarron
+ * {@link BaseExecutor} 本地缓存范围
  */
 public enum LocalCacheScope {
-  SESSION, STATEMENT
+  /**
+   * 会话级
+   */
+  SESSION,
+  /**
+   * SQL 语句级
+   */
+  STATEMENT
 }

@@ -27,6 +27,9 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ * 首先通过 ParameterHandler 完成 SQL 语句的实参绑定，
+ * 然后通过 java.sql.Statement 对象执行 SQL 语句并得到结果集，
+ * 最后通过 ResultSetHandler 完成结果集的映射，得到结果对象并返回。
  */
 public interface StatementHandler {
 
