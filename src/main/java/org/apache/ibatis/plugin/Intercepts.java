@@ -46,6 +46,7 @@ public @interface Intercepts {
    * Returns method signatures to intercept.
    *
    * @return method signatures
+   * 拦截的方法签名的数组
    */
   Signature[] value();
 }
