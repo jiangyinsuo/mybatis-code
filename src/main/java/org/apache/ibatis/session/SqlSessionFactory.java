@@ -21,6 +21,7 @@ import java.sql.Connection;
  * Creates an {@link SqlSession} out of a connection or a DataSource
  *
  * @author Clinton Begin
+ * 负责创建 SqlSession 对象的工厂
  */
 public interface SqlSessionFactory {
 

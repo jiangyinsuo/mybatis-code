@@ -30,6 +30,7 @@ import java.util.Properties;
  *
  * @author Clinton Begin
  * mybatis工作的入口
+ * 是 SqlSessionFactory 的构建器
  */
 public class SqlSessionFactoryBuilder {
 
@@ -86,7 +87,10 @@ public class SqlSessionFactoryBuilder {
 
   public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
     try {
+      // 创建 XMLConfigBuilder 对象
       XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
+      // 执行 XML 解析
+      // 创建 DefaultSqlSessionFactory 对象
       return build(parser.parse());
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error building SqlSession.", e);
@@ -100,6 +104,13 @@ public class SqlSessionFactoryBuilder {
     }
   }
 
+
+  /**
+   * 创建 DefaultSqlSessionFactory 对象
+   *
+   * @param config Configuration 对象
+   * @return DefaultSqlSessionFactory 对象
+   */
   public SqlSessionFactory build(Configuration config) {
     return new DefaultSqlSessionFactory(config);
   }

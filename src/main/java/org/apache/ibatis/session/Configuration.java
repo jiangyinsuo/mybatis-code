@@ -78,6 +78,7 @@ import java.util.function.BiFunction;
 
 /**
  * @author Clinton Begin
+ * MyBatis 配置对象
  */
 public class Configuration {
 
@@ -841,9 +842,11 @@ public class Configuration {
   }
 
   public MappedStatement getMappedStatement(String id, boolean validateIncompleteStatements) {
+    // 校验，保证所有 MappedStatement 已经构造完毕
     if (validateIncompleteStatements) {
       buildAllStatements();
     }
+    // 获取 MappedStatement 对象
     return mappedStatements.get(id);
   }
 
@@ -898,11 +901,13 @@ public class Configuration {
    */
   protected void buildAllStatements() {
     parsePendingResultMaps();
+    // 保证 incompleteCacheRefs 被解析完
     if (!incompleteCacheRefs.isEmpty()) {
       synchronized (incompleteCacheRefs) {
         incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
       }
     }
+    // 保证 incompleteStatements 被解析完
     if (!incompleteStatements.isEmpty()) {
       synchronized (incompleteStatements) {
         incompleteStatements.removeIf(x -> {
@@ -911,6 +916,7 @@ public class Configuration {
         });
       }
     }
+    // 保证 incompleteMethods 被解析完
     if (!incompleteMethods.isEmpty()) {
       synchronized (incompleteMethods) {
         incompleteMethods.removeIf(x -> {

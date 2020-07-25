@@ -65,32 +65,47 @@ public class MapperMethod {
     Object result;
     switch (command.getType()) {
       case INSERT: {
+        // 转换参数
         Object param = method.convertArgsToSqlCommandParam(args);
+        // 执行 INSERT 操作
+        // 转换 rowCount
         result = rowCountResult(sqlSession.insert(command.getName(), param));
         break;
       }
       case UPDATE: {
+        // <1.1> 转换参数
         Object param = method.convertArgsToSqlCommandParam(args);
+        // <1.2> 执行更新
+        // <1.3> 转换 rowCount
         result = rowCountResult(sqlSession.update(command.getName(), param));
         break;
       }
       case DELETE: {
+        // 转换参数
         Object param = method.convertArgsToSqlCommandParam(args);
+        // 转换 rowCount
         result = rowCountResult(sqlSession.delete(command.getName(), param));
         break;
       }
       case SELECT:
+        // <2.1> 无返回，并且有 ResultHandler 方法参数，则将查询的结果，提交给 ResultHandler 进行处理
         if (method.returnsVoid() && method.hasResultHandler()) {
           executeWithResultHandler(sqlSession, args);
           result = null;
+          // <2.2> 执行查询，返回列表
         } else if (method.returnsMany()) {
           result = executeForMany(sqlSession, args);
+          // <2.3> 执行查询，返回 Map
         } else if (method.returnsMap()) {
           result = executeForMap(sqlSession, args);
+          // <2.4> 执行查询，返回 Cursor
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
+          // <2.5> 执行查询，返回单个对象
         } else {
+          // 转换参数
           Object param = method.convertArgsToSqlCommandParam(args);
+          // 查询单条
           result = sqlSession.selectOne(command.getName(), param);
           if (method.returnsOptional()
             && (result == null || !method.getReturnType().equals(result.getClass()))) {
@@ -104,10 +119,12 @@ public class MapperMethod {
       default:
         throw new BindingException("Unknown execution method for: " + command.getName());
     }
+    // 返回结果为 null ，并且返回类型为基本类型，则抛出 BindingException 异常
     if (result == null && method.getReturnType().isPrimitive() && !method.returnsVoid()) {
       throw new BindingException("Mapper method '" + command.getName()
         + " attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
     }
+    // 返回结果
     return result;
   }
 
@@ -146,7 +163,9 @@ public class MapperMethod {
 
   private <E> Object executeForMany(SqlSession sqlSession, Object[] args) {
     List<E> result;
+    // 转换参数
     Object param = method.convertArgsToSqlCommandParam(args);
+    // 执行 SELECT 操作
     if (method.hasRowBounds()) {
       RowBounds rowBounds = method.extractRowBounds(args);
       result = sqlSession.selectList(command.getName(), param, rowBounds);
@@ -154,13 +173,18 @@ public class MapperMethod {
       result = sqlSession.selectList(command.getName(), param);
     }
     // issue #510 Collections & arrays support
+    // 封装 Array 或 Collection 结果
     if (!method.getReturnType().isAssignableFrom(result.getClass())) {
+      // 情况一，Array
       if (method.getReturnType().isArray()) {
         return convertToArray(result);
       } else {
+        // 情况二，Collection
         return convertToDeclaredCollection(sqlSession.getConfiguration(), result);
       }
     }
+    // 情况三，默认
+    // 直接返回的结果
     return result;
   }
 
